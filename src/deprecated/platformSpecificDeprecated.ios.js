@@ -251,7 +251,7 @@ function navigatorPush(navigator, params) {
 
   savePassProps(params);
 
-  Controllers.NavigationControllerIOS(navigator.navigatorID).push({
+  return Controllers.NavigationControllerIOS(navigator.navigatorID).push({
     title: params.title,
     subtitle: params.subtitle,
     titleImage: params.titleImage,
@@ -309,7 +309,7 @@ function navigatorResetTo(navigator, params) {
 
   savePassProps(params);
 
-  Controllers.NavigationControllerIOS(navigator.navigatorID).resetTo({
+  return Controllers.NavigationControllerIOS(navigator.navigatorID).resetTo({
     title: params.title,
     subtitle: params.subtitle,
     titleImage: params.titleImage,
@@ -368,17 +368,17 @@ function navigatorSetStyle(navigator, params) {
 function navigatorToggleDrawer(navigator, params) {
   const controllerID = navigator.navigatorID.split('_')[0];
   if (params.to == 'open') {
-    Controllers.DrawerControllerIOS(controllerID + '_drawer').open({
+    return Controllers.DrawerControllerIOS(controllerID + '_drawer').open({
       side: params.side,
       animated: params.animated
     });
   } else if (params.to == 'closed') {
-    Controllers.DrawerControllerIOS(controllerID + '_drawer').close({
+    return Controllers.DrawerControllerIOS(controllerID + '_drawer').close({
       side: params.side,
       animated: params.animated
     });
   } else {
-    Controllers.DrawerControllerIOS(controllerID + '_drawer').toggle({
+    return Controllers.DrawerControllerIOS(controllerID + '_drawer').toggle({
       side: params.side,
       animated: params.animated
     });
@@ -387,7 +387,7 @@ function navigatorToggleDrawer(navigator, params) {
 
 function navigatorToggleTabs(navigator, params) {
   const controllerID = navigator.navigatorID.split('_')[0];
-  Controllers.TabBarControllerIOS(controllerID + '_tabs').setHidden({
+  return Controllers.TabBarControllerIOS(controllerID + '_tabs').setHidden({
     hidden: params.to == 'hidden',
     animated: !(params.animated === false)
   });
@@ -396,13 +396,13 @@ function navigatorToggleTabs(navigator, params) {
 function navigatorSetTabBadge(navigator, params) {
   const controllerID = navigator.navigatorID.split('_')[0];
   if (params.tabIndex || params.tabIndex === 0) {
-    Controllers.TabBarControllerIOS(controllerID + '_tabs').setBadge({
+    return Controllers.TabBarControllerIOS(controllerID + '_tabs').setBadge({
       tabIndex: params.tabIndex,
       badge: params.badge,
       badgeColor: params.badgeColor
     });
   } else {
-    Controllers.TabBarControllerIOS(controllerID + '_tabs').setBadge({
+    return Controllers.TabBarControllerIOS(controllerID + '_tabs').setBadge({
       contentId: navigator.navigatorID,
       contentType: 'NavigationControllerIOS',
       badge: params.badge
@@ -413,13 +413,13 @@ function navigatorSetTabBadge(navigator, params) {
 function navigatorSetTabButton(navigator, params) {
   const controllerID = navigator.navigatorID.split('_')[0];
   if (params.tabIndex || params.tabIndex === 0) {
-    Controllers.TabBarControllerIOS(controllerID + '_tabs').setTabButton({
+    return Controllers.TabBarControllerIOS(controllerID + '_tabs').setTabButton({
       tabIndex: params.tabIndex,
       icon: params.icon,
       selectedIcon: params.selectedIcon
     });
   } else {
-    Controllers.TabBarControllerIOS(controllerID + '_tabs').setTabButton({
+    return Controllers.TabBarControllerIOS(controllerID + '_tabs').setTabButton({
       contentId: navigator.navigatorID,
       contentType: 'NavigationControllerIOS',
       icon: params.icon,
@@ -431,11 +431,11 @@ function navigatorSetTabButton(navigator, params) {
 function navigatorSwitchToTab(navigator, params) {
   const controllerID = navigator.navigatorID.split('_')[0];
   if (params.tabIndex || params.tabIndex === 0) {
-    Controllers.TabBarControllerIOS(controllerID + '_tabs').switchTo({
+    return Controllers.TabBarControllerIOS(controllerID + '_tabs').switchTo({
       tabIndex: params.tabIndex
     });
   } else {
-    Controllers.TabBarControllerIOS(controllerID + '_tabs').switchTo({
+    return Controllers.TabBarControllerIOS(controllerID + '_tabs').switchTo({
       contentId: navigator.navigatorID,
       contentType: 'NavigationControllerIOS'
     });
@@ -448,14 +448,14 @@ function navigatorSetButtons(navigator, navigatorEventID, params) {
     for (let i = 0; i < buttons.length; i++) {
       buttons[i].onPress = navigatorEventID;
     }
-    Controllers.NavigationControllerIOS(navigator.navigatorID).setLeftButtons(buttons, params.animated);
+    return Controllers.NavigationControllerIOS(navigator.navigatorID).setLeftButtons(buttons, params.animated);
   }
   if (params.rightButtons) {
     const buttons = params.rightButtons.slice(); // clone
     for (let i = 0; i < buttons.length; i++) {
       buttons[i].onPress = navigatorEventID;
     }
-    Controllers.NavigationControllerIOS(navigator.navigatorID).setRightButtons(buttons, params.animated);
+    return Controllers.NavigationControllerIOS(navigator.navigatorID).setRightButtons(buttons, params.animated);
   }
 }
 
