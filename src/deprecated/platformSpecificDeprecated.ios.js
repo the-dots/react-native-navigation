@@ -32,6 +32,7 @@ function startTabBasedApp(params) {
       navigatorEventID
     } = _mergeScreenSpecificSettings(tab.screen, screenInstanceID, tab);
     tab.navigationParams = {
+      screen: tab.screen,
       screenInstanceID,
       navigatorStyle,
       navigatorButtons,
@@ -100,8 +101,8 @@ function startTabBasedApp(params) {
                     navigatorEventID: tab.navigationParams.navigatorEventID,
                   }}
                     style={tab.navigationParams.navigatorStyle}
-                    leftButtons={tab.navigationParams.navigatorButtons.leftButtons}
-                    rightButtons={tab.navigationParams.navigatorButtons.rightButtons}
+                    leftButtons={_passNavigationParamsToButtons('left', tab.navigationParams.navigatorButtons.leftButtons, tab.navigationParams)}
+                    rightButtons={_passNavigationParamsToButtons('right', tab.navigationParams.navigatorButtons.rightButtons, tab.navigationParams)}
                   />
                 </TabBarControllerIOS.Item>
               );
@@ -139,6 +140,7 @@ function startSingleScreenApp(params) {
     navigatorEventID
   } = _mergeScreenSpecificSettings(screen.screen, screenInstanceID, screen);
   params.navigationParams = {
+    screen: screen.screen,
     screenInstanceID,
     navigatorStyle,
     navigatorButtons,
@@ -183,8 +185,8 @@ function startSingleScreenApp(params) {
             navigatorEventID: navigatorEventID
           }}
           style={navigatorStyle}
-          leftButtons={navigatorButtons.leftButtons}
-          rightButtons={navigatorButtons.rightButtons}
+          leftButtons={_passNavigationParamsToButtons('left', navigatorButtons.leftButtons, params.navigationParams)}
+          rightButtons={_passNavigationParamsToButtons('right', navigatorButtons.rightButtons, params.navigationParams)}
           appStyle={params.appStyle}
         />
       );
@@ -194,6 +196,25 @@ function startSingleScreenApp(params) {
 
   ControllerRegistry.registerController(controllerID, () => Controller);
   ControllerRegistry.setRootController(controllerID, params.animationType, params.passProps || {});
+}
+
+function _passNavigationParamsToButtons(prefix, buttons = [], params = {}) {
+  const navProps = {
+    screen: params.screen,
+    navigatorID: params.navigatorID,
+    screenInstanceID: params.screenInstanceID,
+    navigatorEventID: params.navigatorEventID
+  };
+  buttons = buttons.map((button, i) => {
+    button.passProps = button.passProps || {};
+    button.passProps.screenInstanceID = `${navProps.screenInstanceID}_${prefix}Buttons_${i}`;
+    button.passProps = {
+      ...button.passProps,
+      ...navProps
+    };
+    return button;
+  });
+  return buttons;
 }
 
 function _mergeScreenSpecificSettings(screenID, screenInstanceID, params) {
@@ -242,6 +263,7 @@ function navigatorPush(navigator, params) {
   passProps.navigatorEventID = navigatorEventID;
 
   params.navigationParams = {
+    screen: params.screen,
     screenInstanceID,
     navigatorStyle,
     navigatorButtons,
@@ -262,8 +284,8 @@ function navigatorPush(navigator, params) {
     style: navigatorStyle,
     backButtonTitle: params.backButtonTitle,
     backButtonHidden: params.backButtonHidden,
-    leftButtons: navigatorButtons.leftButtons,
-    rightButtons: navigatorButtons.rightButtons,
+    leftButtons: _passNavigationParamsToButtons('left', navigatorButtons.leftButtons, params.navigationParams),
+    rightButtons: _passNavigationParamsToButtons('right', navigatorButtons.rightButtons, params.navigationParams),
     timestamp: Date.now()
   });
 }
@@ -300,6 +322,7 @@ function navigatorResetTo(navigator, params) {
   passProps.navigatorEventID = navigatorEventID;
 
   params.navigationParams = {
+    screen: params.screen,
     screenInstanceID,
     navigatorStyle,
     navigatorButtons,
@@ -318,8 +341,8 @@ function navigatorResetTo(navigator, params) {
     animationType: params.animationType,
     passProps: passProps,
     style: navigatorStyle,
-    leftButtons: navigatorButtons.leftButtons,
-    rightButtons: navigatorButtons.rightButtons
+    leftButtons: _passNavigationParamsToButtons('left', navigatorButtons.leftButtons, params.navigationParams),
+    rightButtons: _passNavigationParamsToButtons('right', navigatorButtons.rightButtons, params.navigationParams)
   });
 }
 
@@ -479,6 +502,7 @@ function showModal(params) {
   passProps.timestamp = Date.now();
 
   params.navigationParams = {
+    screen: params.screen,
     screenInstanceID,
     navigatorStyle,
     navigatorButtons,
@@ -497,8 +521,8 @@ function showModal(params) {
           component={params.screen}
           passProps={passProps}
           style={navigatorStyle}
-          leftButtons={navigatorButtons.leftButtons}
-          rightButtons={navigatorButtons.rightButtons}/>
+          leftButtons={_passNavigationParamsToButtons('left', navigatorButtons.leftButtons, params.navigationParams)}
+          rightButtons={_passNavigationParamsToButtons('right', navigatorButtons.rightButtons, params.navigationParams)}/>
       );
     }
   });
