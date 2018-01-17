@@ -207,10 +207,10 @@ function _passNavigationParamsToButtons(prefix, buttons = [], params = {}) {
   };
   buttons = buttons.map((button, i) => {
     button.passProps = button.passProps || {};
-    button.passProps.screenInstanceID = `${navProps.screenInstanceID}_${prefix}Buttons_${i}`;
     button.passProps = {
       ...button.passProps,
-      ...navProps
+      ...navProps,
+      screenInstanceID: `${navProps.screenInstanceID}_${prefix}Buttons_${i}`
     };
     return button;
   });
@@ -471,14 +471,20 @@ function navigatorSetButtons(navigator, navigatorEventID, params) {
     for (let i = 0; i < buttons.length; i++) {
       buttons[i].onPress = navigatorEventID;
     }
-    return Controllers.NavigationControllerIOS(navigator.navigatorID).setLeftButtons(buttons, params.animated);
+    return Controllers.NavigationControllerIOS(navigator.navigatorID).setLeftButtons(
+      _passNavigationParamsToButtons('left', buttons, navigator),
+      params.animated
+    );
   }
   if (params.rightButtons) {
     const buttons = params.rightButtons.slice(); // clone
     for (let i = 0; i < buttons.length; i++) {
       buttons[i].onPress = navigatorEventID;
     }
-    return Controllers.NavigationControllerIOS(navigator.navigatorID).setRightButtons(buttons, params.animated);
+    return Controllers.NavigationControllerIOS(navigator.navigatorID).setRightButtons(
+      _passNavigationParamsToButtons('right', buttons, navigator),
+      params.animated
+    );
   }
 }
 
