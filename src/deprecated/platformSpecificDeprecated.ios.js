@@ -709,6 +709,9 @@ function _saveNavBarComponentProps(navigatorStyle) {
 }
 
 function _saveNavigatorButtonsProps({rightButtons, leftButtons}) {
+  // @The-Dots we're disabling this feature because it conflicts with passing navigator to navbar buttons
+  // which is more important... but it seems no features are lost anyway
+  return
   _saveNavigatorButtonsPassProps(rightButtons);
   _saveNavigatorButtonsPassProps(leftButtons);
 }
